@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111">
+<link rel="manifest" href="manifest.json">
+<title>رخيص | متجر</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f6f6;color:#222;font-family:Tahoma,Arial,sans-serif}
+header{background:#fff;position:sticky;top:0;z-index:5;border-bottom:1px solid #eee}.wrap{max-width:1000px;margin:auto;padding:14px}
+.brand{font-size:29px;font-weight:900}.sub{color:#777;font-size:13px;margin-top:3px}
+.search{width:100%;padding:13px;border:1px solid #ddd;border-radius:12px;font-size:16px;margin-top:12px}
+.cats{display:flex;gap:7px;overflow:auto;padding-top:10px}.cats button{border:0;border-radius:20px;padding:9px 14px;white-space:nowrap;cursor:pointer}.cats .on{background:#111;color:#fff}
+.hero{background:#fff;border-radius:16px;padding:18px;margin:14px 0}.hero h1{margin:0 0 7px}.hero p{margin:0;color:#666}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px #0000000a}.pic{height:155px;background:#eee;display:grid;place-items:center;font-size:48px}.info{padding:12px}.name{font-weight:bold}.price{font-size:19px;font-weight:bold;margin:7px 0}.add,.checkout,.adminsave{width:100%;border:0;background:#111;color:#fff;padding:11px;border-radius:10px;cursor:pointer;font-weight:bold}
+.float{position:fixed;bottom:14px;left:3%;right:3%;max-width:940px;margin:auto;background:#111;color:#fff;border:0;border-radius:14px;padding:14px;font-size:16px;font-weight:bold;z-index:6}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:20;padding:15px}.box{background:#fff;max-width:650px;margin:20px auto;padding:18px;border-radius:16px;max-height:92vh;overflow:auto}.close{float:left;border:0;border-radius:9px;padding:8px;cursor:pointer}
+input,select,textarea{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:15px}.item{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:10px 0}.qty button{padding:4px 9px}.notice{background:#f0f0f0;padding:10px;border-radius:10px;font-size:13px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="brand">🛍️ رخيص</div><div class="sub">إكسسوارات • خامات • منتجات متنوعة</div>
+<input class="search" id="search" placeholder="ابحث عن منتج..." oninput="render()">
+<div class="cats" id="cats"></div>
+</div></header>
+<main class="wrap">
+<section class="hero"><h1>أهلاً بك في رخيص</h1><p>اختار المنتج، أضفه للسلة، واكتب بيانات التوصيل.</p></section>
+<div id="products" class="grid"></div>
+</main>
+<button class="float" onclick="openCart()">🛒 السلة: <span id="count">0</span> | <span id="total">0</span> جنيه</button>
+
+<div class="modal" id="cartModal"><div class="box">
+<button class="close" onclick="closeModal('cartModal')">✕</button><h2>سلة المشتريات</h2>
+<div id="cartItems"></div><div class="notice">الدفع عند الاستلام في النسخة الحالية. سيتم إرسال الطلب إليك عبر واتساب.</div>
+<h3>بيانات العميل</h3>
+<input id="customerName" placeholder="الاسم">
+<input id="customerPhone" placeholder="رقم الهاتف">
+<select id="customerGov"><option value="">اختر المحافظة</option>
+<option>القاهرة</option><option>الجيزة</option><option>القليوبية</option><option>الإسكندرية</option><option>الدقهلية</option><option>الغربية</option><option>المنوفية</option><option>البحيرة</option><option>كفر الشيخ</option><option>دمياط</option><option>الشرقية</option><option>بورسعيد</option><option>الإسماعيلية</option><option>السويس</option><option>الفيوم</option><option>بني سويف</option><option>المنيا</option><option>أسيوط</option><option>سوهاج</option><option>قنا</option><option>الأقصر</option><option>أسوان</option><option>مطروح</option><option>الوادي الجديد</option><option>شمال سيناء</option><option>جنوب سيناء</option><option>البحر الأحمر</option>
+</select>
+<textarea id="customerAddress" rows="3" placeholder="العنوان بالتفصيل"></textarea>
+<button class="checkout" onclick="sendOrder()">إرسال الطلب على واتساب</button>
+<p id="result"></p>
+</div></div>
+
+<div class="modal" id="adminModal"><div class="box">
+<button class="close" onclick="closeModal('adminModal')">✕</button><h2>⚙️ إدارة رخيص</h2>
+<div class="notice">هذه لوحة إدارة محلية. غيّر رقم واتساب من أعلى ملف <b>app.js</b> قبل النشر.</div>
+<h3>إضافة منتج</h3>
+<input id="pn" placeholder="اسم المنتج"><select id="pc"><option>إكسسوارات</option><option>خامات</option><option>منتجات متنوعة</option></select>
+<input id="pp" type="number" placeholder="السعر بالجنيه"><input id="pi" placeholder="رمز المنتج، مثال: ✨">
+<button class="adminsave" onclick="addProduct()">إضافة المنتج</button><h3>المنتجات</h3><div id="adminProducts"></div>
+</div></div>
+
+<script src="app.js"></script>
+</body></html>
