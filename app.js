@@ -2,7 +2,7 @@
 const STORE_NAME="رخيص";
 // ضع رقم واتساب المتجر هنا بصيغة مصر الدولية بدون + أو مسافات.
 // مثال: 2010XXXXXXXX
-const WHATSAPP="2010XXXXXXXX";
+const WHATSAPP="20128660329";
 
 const defaults=[
 {id:1,n:"سلسلة إكسسوار",c:"إكسسوارات",p:75,i:"📿"},
